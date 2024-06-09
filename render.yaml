@@ -31,7 +31,7 @@ services:
       envVarKey: MYSQL_PASSWORD
 - type: pserv
   name: mysql-wordpress
-  repo: https://github.com/render-examples/mysql.git
+  repo: https://github.com/GasGlide/wordpress.git
   env: docker
   plan: standard
   autoDeploy: false
