@@ -8,17 +8,24 @@
 #RUN chown www-data:www-data /var/www
 #USER www-data:www-data
 
-# Use the WordPress image with PHP 8.1
-FROM wordpress:5.3.2-php8.1-apache
+# Use the official PHP 8.1 Apache image
+FROM php:8.1-apache
 
-# Update the package list and install magic-wormhole
-RUN apt-get update && apt-get install -y magic-wormhole
+# Install required PHP extensions and packages
+RUN apt-get update && apt-get install -y \
+    libzip-dev zip unzip \
+    magic-wormhole \
+    && docker-php-ext-install mysqli pdo pdo_mysql zip
 
-# Change the default shell for the www-data user to /bin/bash
-RUN usermod -s /bin/bash www-data
+# Download and install WordPress
+RUN curl -O https://wordpress.org/latest.tar.gz \
+    && tar -xzvf latest.tar.gz -C /var/www/html --strip-components=1 \
+    && rm latest.tar.gz
 
-# Change the ownership of the /var/www directory to www-data
-RUN chown www-data:www-data /var/www
-
-# Switch to the www-data user
+# Set up permissions
+RUN chown -R www-data:www-data /var/www/html/
 USER www-data
+
+# Expose port 80 and set the default command
+EXPOSE 80
+CMD ["apache2-foreground"]
