@@ -23,6 +23,7 @@ RUN curl -O https://wordpress.org/latest.tar.gz \
 
 # Set up permissions
 RUN chown -R www-data:www-data /var/www/html/
+USER www-data
 
 # Expose port 80 and set the default command
 EXPOSE 80
